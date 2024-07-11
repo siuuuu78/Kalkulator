@@ -1,7 +1,7 @@
 const currDisplay = document.querySelector(".curr-display");
 const prevDisplay = document.querySelector(".prev-display");
-const number = document.querySelectorAll(".number");
-const operand = document.querySelectorAll(".operation");
+const numbers = document.querySelectorAll(".number");
+const operands = document.querySelectorAll(".operation");
 const clearBtn = document.querySelector(".clear");
 const delBtn = document.querySelector(".delete");
 const equalBtn = document.querySelector(".equal");
@@ -12,12 +12,13 @@ function appendNumber(number) {
   currDisplay.innerText += number;
 }
 
-function chooseOperation(operand) {
+function chooseOperation(selectedOperation) {
   if (currDisplay.innerText === "") return;
-  compute(operand);
-  operation = operand;
-  currDisplay.innerText += operand;
-  prevDisplay.innerText = currDisplay.innerText;
+  if (prevDisplay.innerText !== "") {
+    compute();
+  }
+  operation = selectedOperation;
+  prevDisplay.innerText = currDisplay.innerText + " " + operation;
   currDisplay.innerText = "";
 }
 
@@ -26,7 +27,7 @@ function clearDisplay() {
   prevDisplay.innerText = "";
 }
 
-function compute(operand) {
+function compute() {
   let result;
   const previousValue = parseFloat(prevDisplay.innerText);
   const currentValue = parseFloat(currDisplay.innerText);
@@ -37,15 +38,12 @@ function compute(operand) {
     case "+":
       result = previousValue + currentValue;
       break;
-
     case "-":
       result = previousValue - currentValue;
       break;
-
     case "*":
       result = previousValue * currentValue;
       break;
-
     case "/":
       result = previousValue / currentValue;
       break;
@@ -53,17 +51,18 @@ function compute(operand) {
       return;
   }
   currDisplay.innerText = result;
+  prevDisplay.innerText = "";
 }
 
-number.forEach((number) => {
-  number.addEventListener("click", () => {
-    chooseOperation(operand.innerText);
+numbers.forEach((numberBtn) => {
+  numberBtn.addEventListener("click", () => {
+    appendNumber(numberBtn.innerText);
   });
 });
 
-operands.forEach((operand) => {
-  operand.addEventListener("click", () => {
-    chooseOperation(operand.innerText);
+operands.forEach((operandBtn) => {
+  operandBtn.addEventListener("click", () => {
+    chooseOperation(operandBtn.innerText);
   });
 });
 
